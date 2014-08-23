@@ -7,27 +7,50 @@
 #pragma comment(lib, "gdi32.lib")  
 #endif // SFML_STATIC
 
+#include <iostream>
 
 #include <SFML/Graphics.hpp>
 
+#include "GameContext.hpp"
+#include "MainGame.hpp"
+
+using namespace std;
+
+GameContext *GC;
+
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(1280, 800), "LD30");
-	sf::CircleShape shape(100.f);
-	shape.setFillColor(sf::Color::Green);
+	GC = new GameContext();
+	MainGame MG;
 
-	while (window.isOpen())
+	GC->window.create(sf::VideoMode(1280, 800), "LD30", sf::Style::Close | sf::Style::Titlebar);
+
+	MG.Initialize();
+	MG.LoadContent();
+
+	while (GC->window.isOpen())
 	{
 		sf::Event event;
-		while (window.pollEvent(event))
+		while (GC->window.pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
-				window.close();
+				GC->window.close();
+			if (event.type == sf::Event::GainedFocus)
+				GC->IsFocused = true;
+			if (event.type == sf::Event::LostFocus)
+				GC->IsFocused = false;
 		}
 
-		window.clear();
-		window.draw(shape);
-		window.display();
+		GC->updateKeyboard();
+
+		if (KeyPressed(sf::Keyboard::Escape))
+			GC->window.close();
+
+		MG.Update();
+
+		GC->window.clear();
+		MG.Draw();
+		GC->window.display();
 	}
 
 	return 0;
