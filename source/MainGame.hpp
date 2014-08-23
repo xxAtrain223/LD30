@@ -5,7 +5,6 @@ extern GameContext *GC;
 class MainGame
 {
 protected:
-
 	sf::CircleShape shape;
 
 public:
