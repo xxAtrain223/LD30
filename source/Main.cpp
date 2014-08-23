@@ -48,7 +48,7 @@ int main()
 
 		MG.Update();
 
-		GC->window.clear();
+		GC->window.clear(sf::Color::Blue);
 		MG.Draw();
 		GC->window.display();
 	}

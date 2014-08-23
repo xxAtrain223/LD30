@@ -1,32 +1,42 @@
+#include <iostream>
 #include <SFML/Graphics.hpp>
+
 #include "GameContext.hpp"
+#include "Tile.hpp"
+
+using namespace std;
+
 extern GameContext *GC;
 
 class MainGame
 {
 protected:
-	sf::CircleShape shape;
+	sf::Texture tmpTexture;
+	
+	Tile *tile;
+
 
 public:
 	void Initialize()
 	{
-		shape.setFillColor(sf::Color::Green);
-		shape.setPosition(0.f, 0.f);
-		shape.setRadius(100.f);
 	}
 
 	void LoadContent()
 	{
-
+		if (!tmpTexture.loadFromFile("Brick.png")) return;
+		tmpTexture.setSmooth(true);
+		
+		tile = new Tile(sf::Vector2f(100, 100), tmpTexture);
 	}
 
 	void Update()
 	{
-
 	}
 
 	void Draw()
 	{
-		GC->window.draw(shape);
+		tile->Draw();
 	}
 };
+
+
