@@ -38,7 +38,7 @@ public:
 	sf::Vector2i TopLeft()
 	{
 		Rectangle = Sprite.getTextureRect();
-		return sf::Vector2i(Rectangle.left, Rectangle.top);
+		return sf::Vector2i(Rectangle.left + Sprite.getPosition().x, Rectangle.top);
 	}
 
 	sf::Vector2i TopRight()
@@ -62,7 +62,7 @@ public:
 	sf::Vector2i Center()
 	{
 		Rectangle = Sprite.getTextureRect();
-		return sf::Vector2i(Rectangle.left + Rectangle.width / 2, Rectangle.top + Rectangle.height / 2);
+		return sf::Vector2i(Sprite.getPosition().x + Rectangle.width / 2, Sprite.getPosition().y + Rectangle.height / 2);
 	}
 
 	sf::IntRect Rect()

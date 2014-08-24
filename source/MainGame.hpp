@@ -19,6 +19,8 @@ protected:
 
 	sf::Rect<float> Camera;
 	float CameraSpd = 5;
+	float CameraFocus = .5;
+	sf::IntRect CameraFocusRect;
 
 	Player Player1;
 	float PlayerSpd = 3;
@@ -32,7 +34,7 @@ public:
 
 		Player1.Initialize(sf::Vector2f(4 * 64, 2 * 64),
 						   sf::Vector2f(0, 0),
-						   sf::Vector2f(0, 2));
+						   sf::Vector2f(0, 0));
 
 		GC->window.setFramerateLimit(120);
 	}
@@ -92,22 +94,40 @@ public:
 		}
 	}
 
+	void UpdateCamera()
+	{
+		
+		CameraFocusRect.width = Camera.width * CameraFocus;
+		CameraFocusRect.height = Camera.height * CameraFocus;
+		CameraFocusRect.left = ((1 - CameraFocus) * Camera.width) / 2;
+		CameraFocusRect.top = ((1 - CameraFocus) * Camera.height) / 2;
+
+		if (!CameraFocusRect.contains(Player1.Center()))
+		{
+			if (Player1.Center().x < CameraFocusRect.left)
+				Camera.left -= CameraFocusRect.left - Player1.Center().x;
+			if (Player1.Center().x > (CameraFocusRect.left + CameraFocusRect.width))
+				Camera.left += Player1.Center().x - (CameraFocusRect.left + CameraFocusRect.width);
+			if (Player1.Center().y < CameraFocusRect.top)
+				Camera.top -= CameraFocusRect.top - Player1.Center().y;
+			if (Player1.Center().y >(CameraFocusRect.top + CameraFocusRect.height))
+				Camera.top += Player1.Center().y - (CameraFocusRect.top + CameraFocusRect.height);
+		}
+
+		if (Camera.left < 0)
+			Camera.left = 0;
+		if (Camera.top < 0)
+			Camera.top = 0;
+		if ((Camera.left + Camera.width) > (tiles[0].size() * 64))
+			Camera.left = (tiles[0].size() * 64) - Camera.width;
+		if ((Camera.top + Camera.height) > (tiles[0].size() * 64))
+			Camera.top = (tiles[0].size() * 64) - Camera.height;
+	}
+
 	void Update()
 	{
-		if (KeyHeld(sf::Keyboard::Left))
-			Camera.left -= CameraSpd;
-		if (KeyHeld(sf::Keyboard::Right))
-			Camera.left += CameraSpd;
-		if (KeyHeld(sf::Keyboard::Up))
-			Camera.top -= CameraSpd;
-		if (KeyHeld(sf::Keyboard::Down))
-			Camera.top += CameraSpd;
-		if (KeyPressed(sf::Keyboard::Numpad0) || KeyPressed(sf::Keyboard::Num0))
-		{
-			Camera.top = 0;
-			Camera.left = 0;
-		}
-		
+		UpdateCamera();
+
 		for (int i = 0; i < tiles.size(); i++)
 			for (int j = 0; j < tiles[i].size(); j++)
 				tiles[i][j]->Sprite.setPosition(tiles[i][j]->Position.x - Camera.left, tiles[i][j]->Position.y - Camera.top);
@@ -136,6 +156,14 @@ public:
 				tiles[i][j]->Draw();
 
 		Player1.Draw();
+
+		/*
+		sf::RectangleShape camRect;
+		camRect.setPosition(sf::Vector2f(CameraFocusRect.left, CameraFocusRect.top));
+		camRect.setSize(sf::Vector2f(CameraFocusRect.width, CameraFocusRect.height));
+		camRect.setFillColor(sf::Color(255, 0, 0, 64));
+		GC->window.draw(camRect);
+		*/
 	}
 	
 	vector<vector<Tile*>> LoadLevel(const char* filename)
@@ -157,7 +185,7 @@ public:
 			{
 				pixCol = image.getPixel(i, j);
 
-				if (pixCol == sf::Color::White || pixCol.a == 0)
+				if (pixCol == sf::Color::White)
 					tils[i][j] = new Tile(sf::Vector2f(i * 64, j * 64), backGroundTex, false);
 				else if (pixCol == sf::Color::Black)
 					tils[i][j] = new Tile(sf::Vector2f(i * 64, j * 64), foreGroundTex, true);
