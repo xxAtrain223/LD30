@@ -32,7 +32,7 @@ public:
 
 		Player1.Initialize(sf::Vector2f(4 * 64, 2 * 64),
 						   sf::Vector2f(0, 0),
-						   sf::Vector2f(0, 0));
+						   sf::Vector2f(0, 2));
 
 		GC->window.setFramerateLimit(120);
 	}
@@ -122,9 +122,9 @@ public:
 		if (KeyHeld(sf::Keyboard::S))
 			Player1.Velocity.y += PlayerSpd;
 
-		UpdatePlat();
-
 		Player1.Update();
+		UpdatePlat();
+		Player1.ApplyUpdate();
 
 		Player1.Sprite.setPosition(Player1.Position.x - Camera.left, Player1.Position.y - Camera.top);
 	}
@@ -167,5 +167,3 @@ public:
 		return tils;
 	}
 };
-
-

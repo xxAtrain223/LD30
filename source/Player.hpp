@@ -37,7 +37,6 @@ public:
 	void Update()
 	{
 		Velocity += Acceleration;
-		Position += Velocity;
 		
 		if (Velocity.x < 0)
 			Direction = -1;
@@ -47,6 +46,11 @@ public:
 			Direction = 0;
 
 		Sprite.setPosition(Position);
+	}
+
+	void ApplyUpdate()
+	{
+		Position += Velocity;
 	}
 
 	void Draw()
