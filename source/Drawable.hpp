@@ -68,6 +68,8 @@ public:
 	sf::IntRect Rect()
 	{
 		Rectangle = Sprite.getTextureRect();
+		Rectangle.left = Sprite.getPosition().x;
+		Rectangle.top = Sprite.getPosition().y;
 		return Rectangle;
 	}
 
