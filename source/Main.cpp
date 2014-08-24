@@ -23,7 +23,7 @@ int main()
 	GC = new GameContext();
 	MainGame MG;
 
-	GC->window.create(sf::VideoMode(1280, 800), "LD30", sf::Style::Close | sf::Style::Titlebar);
+	GC->window.create(sf::VideoMode(1024, 768), "LD30", sf::Style::Close | sf::Style::Titlebar);
 
 	MG.Initialize();
 	MG.LoadContent();
