@@ -16,10 +16,15 @@ protected:
 	sf::Texture backGroundTex;
 	sf::Texture foreGroundTex;
 
+	sf::Rect<float> Camera;
+	float CameraSpd = 0.5;
+
 public:
 	void Initialize()
 	{
-		
+		Camera.left = 0; Camera.top = 0;
+		Camera.width = GC->window.getSize().x;
+		Camera.height = GC->window.getSize().y;
 	}
 
 	void LoadContent()
@@ -29,6 +34,24 @@ public:
 
 	void Update()
 	{
+		if (KeyHeld(sf::Keyboard::Left))
+			Camera.left -= CameraSpd;
+		if (KeyHeld(sf::Keyboard::Right))
+			Camera.left += CameraSpd;
+		if (KeyHeld(sf::Keyboard::Up))
+			Camera.top -= CameraSpd;
+		if (KeyHeld(sf::Keyboard::Down))
+			Camera.top += CameraSpd;
+		if (KeyPressed(sf::Keyboard::Numpad0) || KeyPressed(sf::Keyboard::Num0))
+		{
+			Camera.top = 0;
+			Camera.left = 0;
+		}
+		
+
+		for (int i = 0; i < tiles.size(); i++)
+			for (int j = 0; j < tiles[i].size(); j++)
+				tiles[i][j]->Sprite.setPosition(i * 64 - Camera.left, j * 64 - Camera.top);
 	}
 
 	void Draw()
